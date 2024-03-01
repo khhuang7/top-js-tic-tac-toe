@@ -103,8 +103,6 @@ function GameController() {
   // individual turn: player selects a vacant space; update Gameboard
   const takeTurn = (row, column) => {
     gameboard.addToken(activePlayer.getToken(), row, column);
-    gameboard.printGrid(); // replace later?
-    changeTurns();
   }
 
   // overall gameplay: alternating turns
@@ -112,19 +110,22 @@ function GameController() {
     activePlayer = (activePlayer === player1) ? player2 : player1;
   }
 
+  const printNewRound = () => {
+    grid = gameboard.printGrid();
+  }
+
   // check for game over 
   const checkGameOver = () => {
     const size = gameboard.getSize();
-    const grid = gameboard.printGrid();
     console.log(grid);
     
     checkRows:
     for (i = 0; i < size; i++) {
-      console.log(`row ${i} value: ${grid[i][0]}`);
+      // console.log(`row ${i} value: ${grid[i][0]}`);
       if(grid[i][0] === 0) continue;
 
       for (j = 1; j < size; j++) {
-        console.log(`row ${i} column ${j} value: ${grid[i][j]}`);
+        // console.log(`row ${i} column ${j} value: ${grid[i][j]}`);
         if (grid[i][0] !== grid[i][j]) continue checkRows;
       }
       console.log(`Game over - row ${i}`);
@@ -134,11 +135,11 @@ function GameController() {
 
     checkColumns:
     for (j = 0; j < size; j++) {
-      console.log(`column ${j} value: ${grid[0][j]}`);
+      // console.log(`column ${j} value: ${grid[0][j]}`);
       if (grid[0][j] === 0) continue;
 
       for (i = 1; i < size; i++) {
-        console.log(`row ${i} column ${j} value: ${grid[i][j]}`);
+        // console.log(`row ${i} column ${j} value: ${grid[i][j]}`);
         if (grid[0][j] !== grid[i][j]) continue checkColumns;
       }
       console.log(`Game over - column ${j}`);
@@ -147,11 +148,11 @@ function GameController() {
     }
 
     if(grid[0][0] === 0) return;
-    console.log("checking diagonal left to right");
+    // console.log("checking diagonal left to right");
     checkDiagonalLeftToRight:
     while(gameOver === false) {
       for (i = 1; i < size; i++) {
-        console.log(`row ${i} column ${i} value: ${grid[i][i]}`);
+        // console.log(`row ${i} column ${i} value: ${grid[i][i]}`);
         if (grid[0][0] !== grid[i][i]) break checkDiagonalLeftToRight;
         
       }
@@ -161,11 +162,11 @@ function GameController() {
     }
 
     if (grid[0][size - 1] === 0) return;
-    console.log("checking diagonal right to left");
+    // console.log("checking diagonal right to left");
     checkDiagonalRightToLeft:
     while(gameOver === false) {
       for (i = 1; i < size; i++) {
-        console.log(`row ${i} column ${size - 1 - i} value: ${grid[i][size - 1 - i]}`);
+        // console.log(`row ${i} column ${size - 1 - i} value: ${grid[i][size - 1 - i]}`);
         if (grid[0][size - 1] !== grid[i][size - 1 - i]) break checkDiagonalRightToLeft;
       }
       console.log("Game over - diagonal from right to left");
@@ -175,9 +176,15 @@ function GameController() {
   }
 
   // play game: alternate turns until game over, then report a winner
+  const playRound = (row, column) => {
+    takeTurn(row, column);
+    printNewRound();
+    checkGameOver();
+    changeTurns();
+  }
 
   return {
-    takeTurn,
+    playRound,
     checkGameOver
   }
 }
@@ -185,41 +192,31 @@ function GameController() {
 
 console.log("GAME 1: WIN DIAGONAL LEFT TO RIGHT");
 const game = GameController();
-game.takeTurn(2, 2);
-game.takeTurn(1, 2);
-game.takeTurn(1, 1);
-game.checkGameOver();
-game.takeTurn(2, 1);
-game.checkGameOver();
-game.takeTurn(0, 0);
-game.checkGameOver();
+game.playRound(2, 2);
+game.playRound(1, 2);
+game.playRound(1, 1);
+game.playRound(2, 1);
+game.playRound(0, 0);
 
 
 console.log("GAME 2: WIN MIDDLE COLUMN");
 const game2 = GameController();
-game2.takeTurn(2, 2);
-game2.takeTurn(1, 1);
-game2.takeTurn(1, 2);
-game2.checkGameOver();
-game2.takeTurn(2, 1);
-game2.checkGameOver();
-game2.takeTurn(0, 0);
-game2.takeTurn(0, 1);
-game2.checkGameOver();
+game2.playRound(2, 2);
+game2.playRound(1, 1);
+game2.playRound(1, 2);
+game2.playRound(2, 1);
+game2.playRound(0, 0);
+game2.playRound(0, 1);
 
 console.log("GAME 3: WIN LAST ROW");
 const game3 = GameController();
-game3.takeTurn(2, 2);
-game3.takeTurn(1, 1);
-game3.takeTurn(2, 1);
-game3.checkGameOver();
-game3.takeTurn(1, 2);
-game3.checkGameOver();
-game3.takeTurn(2, 0);
-game3.checkGameOver();
+game3.playRound(2, 2);
+game3.playRound(1, 1);
+game3.playRound(2, 1);
+game3.playRound(1, 2);
+game3.playRound(2, 0);
 
 /* TO DO:
-- Include logic checking for when the game is over (3 in a row or ties)
 - once the game works, create an object to handle the display/DOM - render
 - write functions to allow players to add marks to a specific spot on the board using the DOM
 - Input names
