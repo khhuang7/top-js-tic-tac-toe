@@ -118,6 +118,8 @@ function GameController() {
     activePlayer = (activePlayer === player1) ? player2 : player1;
   }
 
+  const getActivePlayer = () => activePlayer.getName();
+
   const printNewRound = () => {
     grid = gameboard.printGrid();
     return grid;
@@ -205,7 +207,8 @@ function GameController() {
     printNewRound,
     playRound,
     checkGameOver,
-    startGame
+    startGame,
+    getActivePlayer
   }
 }
 
@@ -256,6 +259,7 @@ function ScreenController() {
   const playerXName = document.getElementById("playerX");
   const playerOName = document.getElementById("playerO");
   const startBtn = document.getElementById("start-btn");
+  const activePlayerName = document.getElementById("active-player");
   const game = GameController();
 
   // start game on button click with player 1 and player 2 names
@@ -264,6 +268,11 @@ function ScreenController() {
     console.log(`X: ${playerXName.value}, O: ${playerOName.value}`);
     game.startGame(playerXName.value, playerOName.value);
     render();
+  }
+
+  // print active player name
+  const updateActivePlayer = () => {
+    activePlayerName.textContent = game.getActivePlayer();
   }
 
   // render (print a new line for each row, print a new button for each cell)
@@ -289,6 +298,7 @@ function ScreenController() {
           case "O":
             console.log("symbol");
             button.textContent = grid[i][j];
+            button.disabled = true;
             break;
         }
 
@@ -296,6 +306,7 @@ function ScreenController() {
       }
       gameboardDiv.append(row);
     }
+    updateActivePlayer();
   }
 
   // play a round if a valid button (empty cell) on the board is clicked
@@ -316,7 +327,6 @@ function ScreenController() {
 ScreenController();
 
 /* TO DO:
-- Cell button styling
 - Active player display
 - Game over display 
 - Restart button

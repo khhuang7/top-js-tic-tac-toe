@@ -1,5 +1,5 @@
 :root {
-  --cell-size: 30vw;
+  --cell-size: 28vmin;
 }
 
 .row {
@@ -10,4 +10,19 @@
   box-sizing: border-box;
   width: var(--cell-size);
   height: var(--cell-size);
+  border-radius: 0px;
+  margin: 5px;
+  border: none;
+  font-size: 4rem;
+  cursor: pointer;
+}
+
+.cell:disabled {
+  cursor: auto;
+  color: black;
+}
+
+.cell,
+.cell:disabled {
+  background-color: #ccc;
 }
