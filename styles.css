@@ -1,0 +1,13 @@
+:root {
+  --cell-size: 30vw;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  box-sizing: border-box;
+  width: var(--cell-size);
+  height: var(--cell-size);
+}

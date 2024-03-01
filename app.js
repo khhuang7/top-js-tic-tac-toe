@@ -94,11 +94,19 @@ function Player(name, token) {
 
 function GameController() {
   // start or reset the board
-  const gameboard = Gameboard();
-  const player1 = Player("First", "X");
-  const player2 = Player("second", "O");
-  let activePlayer = player1;
-  let gameOver = false;
+  let gameboard;
+  let player1;
+  let player2;
+  let activePlayer;
+  let gameOver;
+
+  const startGame = (name1, name2) => {
+    gameboard = Gameboard();
+    player1 = Player(name1, "X");
+    player2 = Player(name2, "O");
+    activePlayer = player1;
+    gameOver = false;
+  }
 
   // individual turn: player selects a vacant space; update Gameboard
   const takeTurn = (row, column) => {
@@ -112,6 +120,7 @@ function GameController() {
 
   const printNewRound = () => {
     grid = gameboard.printGrid();
+    return grid;
   }
 
   // check for game over 
@@ -184,42 +193,109 @@ function GameController() {
   }
 
   return {
+    printNewRound,
     playRound,
-    checkGameOver
+    checkGameOver,
+    startGame
   }
 }
 
+// console.log("GAME 1: WIN DIAGONAL LEFT TO RIGHT");
+// const game = GameController();
+// game.startGame();
+// game.playRound(2, 2);
+// game.playRound(1, 2);
+// game.playRound(1, 1);
+// game.playRound(2, 1);
+// game.playRound(0, 0);
 
-console.log("GAME 1: WIN DIAGONAL LEFT TO RIGHT");
-const game = GameController();
-game.playRound(2, 2);
-game.playRound(1, 2);
-game.playRound(1, 1);
-game.playRound(2, 1);
-game.playRound(0, 0);
 
+// console.log("GAME 2: WIN MIDDLE COLUMN");
+// game.startGame();
+// game.playRound(2, 2);
+// game.playRound(1, 1);
+// game.playRound(1, 2);
+// game.playRound(2, 1);
+// game.playRound(0, 0);
+// game.playRound(0, 1);
 
-console.log("GAME 2: WIN MIDDLE COLUMN");
-const game2 = GameController();
-game2.playRound(2, 2);
-game2.playRound(1, 1);
-game2.playRound(1, 2);
-game2.playRound(2, 1);
-game2.playRound(0, 0);
-game2.playRound(0, 1);
+// console.log("GAME 3: WIN LAST ROW");
+// game.startGame();
+// game.playRound(2, 2);
+// game.playRound(1, 1);
+// game.playRound(2, 1);
+// game.playRound(1, 2);
+// game.playRound(2, 0);
 
-console.log("GAME 3: WIN LAST ROW");
-const game3 = GameController();
-game3.playRound(2, 2);
-game3.playRound(1, 1);
-game3.playRound(2, 1);
-game3.playRound(1, 2);
-game3.playRound(2, 0);
+function ScreenController() {
+  // reference all the necessary DOM elements
+  const gameboardDiv = document.getElementById("gameboard");
+  const playerXName = document.getElementById("playerX");
+  const playerOName = document.getElementById("playerO");
+  const startBtn = document.getElementById("start-btn");
+  const game = GameController();
+
+  // start game on button click with player 1 and player 2 names
+  const startGame = (event) => {
+    event.preventDefault();
+    console.log(`X: ${playerXName.value}, O: ${playerOName.value}`);
+    game.startGame(playerXName.value, playerOName.value);
+    render();
+  }
+
+  // render (print a new line for each row, print a new button for each cell)
+  const render = () => {
+    gameboardDiv.textContent = "";
+    const grid = game.printNewRound();
+    console.log(grid);
+    const size = grid.length;
+    for (i = 0; i < size; i++) {
+      let row = document.createElement("div");
+      row.setAttribute("class", "row");
+      for (j = 0; j < size; j++) {
+        let button = document.createElement("button");
+        button.setAttribute("class", "cell");
+
+        switch (grid[i][j]) {
+          case 0:
+            console.log("case 0");
+            button.dataset.row = i;
+            button.dataset.column = j;
+            break;
+          case "X":
+          case "O":
+            console.log("symbol");
+            button.textContent = grid[i][j];
+            break;
+        }
+
+        row.appendChild(button);
+      }
+      gameboardDiv.append(row);
+    }
+  }
+
+  // play a round if a valid button (empty cell) on the board is clicked
+  const boardClickHandler = (event) => {
+    // ensure a valid button is clicked
+    if (!event.target.dataset.row) return;
+
+    // play round given the row and column
+    game.playRound(event.target.dataset.row, event.target.dataset.column);
+    render();
+  }
+
+  // assign event handlers
+  startBtn.addEventListener("click", startGame);
+  gameboardDiv.addEventListener("click", boardClickHandler);
+}
+
+ScreenController();
 
 /* TO DO:
-- once the game works, create an object to handle the display/DOM - render
-- write functions to allow players to add marks to a specific spot on the board using the DOM
-- Input names
-- Start/restart button
-- Results display
+- Cell button styling
+- Active player display
+- Game over display 
+- Restart button
+- Make Xs and Os look nicer
 */
