@@ -129,11 +129,11 @@ function GameController() {
     console.log(grid);
     
     checkRows:
-    for (i = 0; i < size; i++) {
+    for (let i = 0; i < size; i++) {
       // console.log(`row ${i} value: ${grid[i][0]}`);
       if(grid[i][0] === 0) continue;
 
-      for (j = 1; j < size; j++) {
+      for (let j = 1; j < size; j++) {
         // console.log(`row ${i} column ${j} value: ${grid[i][j]}`);
         if (grid[i][0] !== grid[i][j]) continue checkRows;
       }
@@ -143,11 +143,11 @@ function GameController() {
     }
 
     checkColumns:
-    for (j = 0; j < size; j++) {
+    for (let j = 0; j < size; j++) {
       // console.log(`column ${j} value: ${grid[0][j]}`);
       if (grid[0][j] === 0) continue;
 
-      for (i = 1; i < size; i++) {
+      for (let i = 1; i < size; i++) {
         // console.log(`row ${i} column ${j} value: ${grid[i][j]}`);
         if (grid[0][j] !== grid[i][j]) continue checkColumns;
       }
@@ -160,7 +160,7 @@ function GameController() {
     // console.log("checking diagonal left to right");
     checkDiagonalLeftToRight:
     while(gameOver === false) {
-      for (i = 1; i < size; i++) {
+      for (let i = 1; i < size; i++) {
         // console.log(`row ${i} column ${i} value: ${grid[i][i]}`);
         if (grid[0][0] !== grid[i][i]) break checkDiagonalLeftToRight;
         
@@ -174,7 +174,7 @@ function GameController() {
     // console.log("checking diagonal right to left");
     checkDiagonalRightToLeft:
     while(gameOver === false) {
-      for (i = 1; i < size; i++) {
+      for (let i = 1; i < size; i++) {
         // console.log(`row ${i} column ${size - 1 - i} value: ${grid[i][size - 1 - i]}`);
         if (grid[0][size - 1] !== grid[i][size - 1 - i]) break checkDiagonalRightToLeft;
       }
@@ -182,6 +182,15 @@ function GameController() {
       gameOver = true;
       return;
     }
+
+    // check if board is full (i.e. game is tied)
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
+        if (grid[i][j] === 0) return;
+      }
+    }
+    console.log("Game over - it's a tie");
+    gameOver = true;
   }
 
   // play game: alternate turns until game over, then report a winner
@@ -200,8 +209,9 @@ function GameController() {
   }
 }
 
-// console.log("GAME 1: WIN DIAGONAL LEFT TO RIGHT");
 // const game = GameController();
+
+// console.log("GAME 1: WIN DIAGONAL LEFT TO RIGHT");
 // game.startGame();
 // game.playRound(2, 2);
 // game.playRound(1, 2);
@@ -226,6 +236,19 @@ function GameController() {
 // game.playRound(2, 1);
 // game.playRound(1, 2);
 // game.playRound(2, 0);
+
+// console.log("GAME 4: IT'S A TIE");
+// game.startGame();
+// game.playRound(2, 2);
+// game.playRound(1, 1);
+// game.playRound(2, 1);
+// game.playRound(1, 2);
+// game.playRound(1, 0);
+// game.playRound(0, 0);
+// game.playRound(0, 2);
+// game.playRound(2, 0);
+// game.playRound(0, 1);
+
 
 function ScreenController() {
   // reference all the necessary DOM elements
