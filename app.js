@@ -52,7 +52,7 @@ function Gameboard() {
     return gridWithTokens;
   }
 
-  // add player's symbol to the gameboard
+  // add player's token to the gameboard
   const  addToken = (token, row, column) => {
     let cell = grid[row][column];
     cell.setValue(token);
@@ -115,10 +115,14 @@ function GameController() {
 
   // overall gameplay: alternating turns
   const changeTurns = () => {
-    activePlayer = (activePlayer === player1) ? player2 : player1;
+    if (gameOver === false) {
+      activePlayer = (activePlayer === player1) ? player2 : player1;
+    }
   }
 
   const getActivePlayer = () => activePlayer.getName();
+
+  const getActiveToken = () => activePlayer.getToken();
 
   const printNewRound = () => {
     grid = gameboard.printGrid();
@@ -128,7 +132,6 @@ function GameController() {
   // check for game over 
   const checkGameOver = () => {
     const size = gameboard.getSize();
-    console.log(grid);
     
     checkRows:
     for (let i = 0; i < size; i++) {
@@ -193,6 +196,8 @@ function GameController() {
     }
     console.log("Game over - it's a tie");
     gameOver = true;
+    return;
+
   }
 
   // play game: alternate turns until game over, then report a winner
@@ -203,12 +208,15 @@ function GameController() {
     changeTurns();
   }
 
+  const gameStatus = () => gameOver;
+
   return {
     printNewRound,
     playRound,
-    checkGameOver,
     startGame,
-    getActivePlayer
+    getActivePlayer,
+    getActiveToken,
+    gameStatus
   }
 }
 
@@ -256,15 +264,21 @@ function GameController() {
 function ScreenController() {
   // reference all the necessary DOM elements
   const gameboardDiv = document.getElementById("gameboard");
+  const playersDiv = document.getElementById("players");
   const playerXName = document.getElementById("playerX");
   const playerOName = document.getElementById("playerO");
   const startBtn = document.getElementById("start-btn");
   const activePlayerName = document.getElementById("active-player");
+  const resultDiv = document.getElementById("result");
+  const winnerName = document.getElementById("winner-name");
+  const winnerToken = document.getElementById("winner-token");
+  const resetBtn = document.getElementById("reset");
   const game = GameController();
 
   // start game on button click with player 1 and player 2 names
   const startGame = (event) => {
     event.preventDefault();
+    playersDiv.classList.toggle("show");
     console.log(`X: ${playerXName.value}, O: ${playerOName.value}`);
     game.startGame(playerXName.value, playerOName.value);
     render();
@@ -290,13 +304,11 @@ function ScreenController() {
 
         switch (grid[i][j]) {
           case 0:
-            console.log("case 0");
             button.dataset.row = i;
             button.dataset.column = j;
             break;
           case "X":
           case "O":
-            console.log("symbol");
             button.textContent = grid[i][j];
             button.disabled = true;
             break;
@@ -317,17 +329,36 @@ function ScreenController() {
     // play round given the row and column
     game.playRound(event.target.dataset.row, event.target.dataset.column);
     render();
+    console.log(game.gameStatus());  
+
+    // Stop game if game over
+    if (game.gameStatus() === true) {
+      console.log("Running game over presentation");
+      const cellBtns = document.querySelectorAll(".cell");
+      cellBtns.forEach((btn) => {
+        console.log(btn);
+        btn.disabled = true;
+      });
+      winnerName.textcontent = game.getActivePlayer();
+      winnerToken.textcontent = game.getActiveToken();
+      resultDiv.classList.toggle("show");
+    }    
+  }
+
+  const resetGame = () => {
+    resultDiv.classList.toggle("show");
+    playersDiv.classList.toggle("show");
   }
 
   // assign event handlers
   startBtn.addEventListener("click", startGame);
+  resetBtn.addEventListener("click", resetGame);
   gameboardDiv.addEventListener("click", boardClickHandler);
 }
 
 ScreenController();
 
 /* TO DO:
-- Active player display
 - Game over display 
 - Restart button
 - Make Xs and Os look nicer

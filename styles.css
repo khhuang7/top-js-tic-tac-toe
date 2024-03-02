@@ -26,3 +26,7 @@
 .cell:disabled {
   background-color: #ccc;
 }
+
+.show {
+  background-color: red;
+}

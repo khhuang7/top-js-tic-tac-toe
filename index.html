@@ -7,17 +7,25 @@
   <title>Document</title>
 </head>
 <body>
-  <form id="players">
-    <label for="player1">Player X:</label>
-    <input type="text" id="playerX">
-    <label for="player2">Player O:</label>
-    <input type="text" id="playerO">
-    <button type="submit" id="start-btn">Start Game</button>
-  </form>
+  <div id="players" class="show">
+    <form>
+      <label for="playerX">Player X:</label>
+      <input type="text" id="playerX">
+      <label for="playerO">Player O:</label>
+      <input type="text" id="playerO">
+      <button type="submit" id="start-btn">Start Game</button>
+    </form>
+  </div>
 
   <div>Active player: <span id="active-player"></span></div>
 
   <div id="gameboard"></div>
+
+  <div id="result">
+    <h3>Game over!</h3>
+    The winner is <span id="winner-name"></span> (Player <span id="winner-token"></span>).
+    <button id="reset">Play again?</button>
+  </div>
 
   <script src="./app.js"></script>
 </body>
