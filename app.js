@@ -359,7 +359,7 @@ function ScreenController() {
 ScreenController();
 
 /* TO DO:
-- Game over display 
-- Restart button
+- make players form and results div appear/disappear
 - Make Xs and Os look nicer
+- Change colours of disabled buttons vs. active
 */

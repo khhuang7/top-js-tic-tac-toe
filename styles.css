@@ -1,5 +1,58 @@
 :root {
   --cell-size: 28vmin;
+  --color-dark: #12372a;
+  --color-primary: #436850;
+  --color-secondary: #ADBC9F;
+  --color-light: #FBFADA;
+}
+
+* {
+  font-family:Verdana, Geneva, Tahoma, sans-serif
+}
+
+#players {
+  background-color: var(--color-secondary);
+}
+
+#players form {
+  width: max(300px, 60%);
+  padding: 20px;
+  margin: auto;
+
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* display: grid;
+  gap: 15px;
+  justify-items: center; */
+}
+
+@media screen and (min-width: 700px) {
+  /* #players form {
+    grid-template-columns: 3fr 3fr 1fr;
+    align-items: end;
+    justify-content: center;
+  } */
+}
+
+.form-item {
+  flex: 1 0 auto;
+  text-align: center;
+}
+
+.form-item.button {
+  width: 100%;
+}
+
+button:not(.cell) {
+  padding: 5px 30px;
+  background-color: var(--color-primary);
+  color: white;
+  font-weight: bold;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
 }
 
 .row {
@@ -28,5 +81,4 @@
 }
 
 .show {
-  background-color: red;
 }
