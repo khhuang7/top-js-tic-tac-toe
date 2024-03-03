@@ -359,7 +359,6 @@ function ScreenController() {
 ScreenController();
 
 /* TO DO:
-- make players form and results div appear/disappear
-- Make Xs and Os look nicer
-- Change colours of disabled buttons vs. active
+- fix results div
+- make results div appear/disappear
 */

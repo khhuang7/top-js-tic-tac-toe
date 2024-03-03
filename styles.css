@@ -1,39 +1,44 @@
 :root {
-  --cell-size: 28vmin;
+  --cell-size: 23vmin;
   --color-dark: #12372a;
   --color-primary: #436850;
   --color-secondary: #ADBC9F;
   --color-light: #FBFADA;
+  --gap-small: 20px;
+  --gap-medium: 30px;
+  --gap-large: 40px;
 }
 
 * {
   font-family:Verdana, Geneva, Tahoma, sans-serif
 }
 
+body {
+  margin: 0;
+}
+
+
 #players {
   background-color: var(--color-secondary);
+  position: absolute;
+  box-sizing: border-box;
+  width: 100vw;
+
+  /* Transitioning */
+  opacity: 0;
+  transition: 0.2s ease;
 }
 
 #players form {
   width: max(300px, 60%);
-  padding: 20px;
+  padding: var(--gap-small);
   margin: auto;
+  font-size: 1.5rem;
 
   display: flex;
-  gap: 20px;
+  gap: var(--gap-small);
   flex-wrap: wrap;
   justify-content: center;
-  /* display: grid;
-  gap: 15px;
-  justify-items: center; */
-}
-
-@media screen and (min-width: 700px) {
-  /* #players form {
-    grid-template-columns: 3fr 3fr 1fr;
-    align-items: end;
-    justify-content: center;
-  } */
 }
 
 .form-item {
@@ -41,18 +46,44 @@
   text-align: center;
 }
 
+.form-item:not(.button) {
+  display: grid;
+  grid-auto-flow: column;
+}
+
+input {
+  appearance: none;
+  border: none;
+  border-radius: 15px;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 5px;
+}
+
 .form-item.button {
   width: 100%;
 }
 
 button:not(.cell) {
-  padding: 5px 30px;
+  padding: 10px var(--gap-large);
   background-color: var(--color-primary);
   color: white;
-  font-weight: bold;
+  font-size: 1.5rem;
   border-radius: 15px;
   border: none;
   cursor: pointer;
+}
+
+.game-main {
+  padding: var(--gap-small);
+  display: grid;
+  justify-items: center;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.game-main > div {
+  margin: var(--gap-small);
 }
 
 .row {
@@ -66,19 +97,19 @@ button:not(.cell) {
   border-radius: 0px;
   margin: 5px;
   border: none;
-  font-size: 4rem;
   cursor: pointer;
+
+  font-size: 4rem;
+  background-color: var(--color-secondary);
+  color: white;
 }
 
 .cell:disabled {
   cursor: auto;
+  background-color: var(--color-light);
   color: black;
 }
 
-.cell,
-.cell:disabled {
-  background-color: #ccc;
-}
-
-.show {
+#players.show {
+  opacity: 1;
 }
