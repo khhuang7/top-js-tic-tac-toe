@@ -34,18 +34,9 @@ function Gameboard() {
       grid[i].push(Cell(i, j));
     }
   }
-  // console.log(grid);
-
-  // const getGrid = () => grid;
 
   const printGrid = () => {
     let gridWithTokens = [];
-    // for (i = 0; i < size; i++) {
-    //   gridWithTokens[i] = [];
-    //   for (j = 0; j < size; j++) {
-    //     gridWithTokens[i].push(grid[i][j].getValue());
-    //   }
-    // }
     gridWithTokens = grid.map((row) =>
       row.map((cell) => cell.getValue())
     );
@@ -80,17 +71,6 @@ function Player(name, token) {
     getName
   }
 }
-
-// const game = Gameboard();
-// const player1 = Player("First", "X");
-// const player2 = Player("Second", "O");
-// console.log(player1.getToken());
-// game.addToken(player1.getToken(), 0, 2);
-// game.addToken(player2.getToken(), 1, 0);
-// game.addToken(player1.getToken(), 1, 2);
-// game.printGrid();
-// console.log(game.getDimensions());
-
 
 function GameController() {
   // start or reset the board
@@ -135,56 +115,44 @@ function GameController() {
     
     checkRows:
     for (let i = 0; i < size; i++) {
-      // console.log(`row ${i} value: ${grid[i][0]}`);
       if(grid[i][0] === 0) continue;
 
       for (let j = 1; j < size; j++) {
-        // console.log(`row ${i} column ${j} value: ${grid[i][j]}`);
         if (grid[i][0] !== grid[i][j]) continue checkRows;
       }
-      console.log(`Game over - row ${i}`);
-      gameOver = true;
+      gameOver = "won";
       return;
     }
 
     checkColumns:
     for (let j = 0; j < size; j++) {
-      // console.log(`column ${j} value: ${grid[0][j]}`);
       if (grid[0][j] === 0) continue;
 
       for (let i = 1; i < size; i++) {
-        // console.log(`row ${i} column ${j} value: ${grid[i][j]}`);
         if (grid[0][j] !== grid[i][j]) continue checkColumns;
       }
-      console.log(`Game over - column ${j}`);
-      gameOver = true;
+      gameOver = "won";
       return;
     }
 
     if(grid[0][0] === 0) return;
-    // console.log("checking diagonal left to right");
     checkDiagonalLeftToRight:
     while(gameOver === false) {
       for (let i = 1; i < size; i++) {
-        // console.log(`row ${i} column ${i} value: ${grid[i][i]}`);
         if (grid[0][0] !== grid[i][i]) break checkDiagonalLeftToRight;
         
       }
-      console.log("Game over - diagonal from left to right");
-      gameOver = true;
+      gameOver = "won";
       return;
     }
 
     if (grid[0][size - 1] === 0) return;
-    // console.log("checking diagonal right to left");
     checkDiagonalRightToLeft:
     while(gameOver === false) {
       for (let i = 1; i < size; i++) {
-        // console.log(`row ${i} column ${size - 1 - i} value: ${grid[i][size - 1 - i]}`);
         if (grid[0][size - 1] !== grid[i][size - 1 - i]) break checkDiagonalRightToLeft;
       }
-      console.log("Game over - diagonal from right to left");
-      gameOver = true;
+      gameOver = "won";
       return;
     }
 
@@ -194,8 +162,7 @@ function GameController() {
         if (grid[i][j] === 0) return;
       }
     }
-    console.log("Game over - it's a tie");
-    gameOver = true;
+    gameOver = "tied";
     return;
 
   }
@@ -220,47 +187,6 @@ function GameController() {
   }
 }
 
-// const game = GameController();
-
-// console.log("GAME 1: WIN DIAGONAL LEFT TO RIGHT");
-// game.startGame();
-// game.playRound(2, 2);
-// game.playRound(1, 2);
-// game.playRound(1, 1);
-// game.playRound(2, 1);
-// game.playRound(0, 0);
-
-
-// console.log("GAME 2: WIN MIDDLE COLUMN");
-// game.startGame();
-// game.playRound(2, 2);
-// game.playRound(1, 1);
-// game.playRound(1, 2);
-// game.playRound(2, 1);
-// game.playRound(0, 0);
-// game.playRound(0, 1);
-
-// console.log("GAME 3: WIN LAST ROW");
-// game.startGame();
-// game.playRound(2, 2);
-// game.playRound(1, 1);
-// game.playRound(2, 1);
-// game.playRound(1, 2);
-// game.playRound(2, 0);
-
-// console.log("GAME 4: IT'S A TIE");
-// game.startGame();
-// game.playRound(2, 2);
-// game.playRound(1, 1);
-// game.playRound(2, 1);
-// game.playRound(1, 2);
-// game.playRound(1, 0);
-// game.playRound(0, 0);
-// game.playRound(0, 2);
-// game.playRound(2, 0);
-// game.playRound(0, 1);
-
-
 function ScreenController() {
   // reference all the necessary DOM elements
   const gameboardDiv = document.getElementById("gameboard");
@@ -270,8 +196,7 @@ function ScreenController() {
   const startBtn = document.getElementById("start-btn");
   const activePlayerName = document.getElementById("active-player");
   const resultDiv = document.getElementById("result");
-  const winnerName = document.getElementById("winner-name");
-  const winnerToken = document.getElementById("winner-token");
+  const reportWinner = document.getElementById("report-winner");
   const resetBtn = document.getElementById("reset");
   const game = GameController();
 
@@ -279,7 +204,6 @@ function ScreenController() {
   const startGame = (event) => {
     event.preventDefault();
     playersDiv.classList.toggle("show");
-    console.log(`X: ${playerXName.value}, O: ${playerOName.value}`);
     game.startGame(playerXName.value, playerOName.value);
     render();
   }
@@ -293,7 +217,6 @@ function ScreenController() {
   const render = () => {
     gameboardDiv.textContent = "";
     const grid = game.printNewRound();
-    console.log(grid);
     const size = grid.length;
     for (i = 0; i < size; i++) {
       let row = document.createElement("div");
@@ -329,18 +252,23 @@ function ScreenController() {
     // play round given the row and column
     game.playRound(event.target.dataset.row, event.target.dataset.column);
     render();
-    console.log(game.gameStatus());  
 
     // Stop game if game over
-    if (game.gameStatus() === true) {
-      console.log("Running game over presentation");
+    if ((game.gameStatus() === "won") || (game.gameStatus() === "tied")) {
       const cellBtns = document.querySelectorAll(".cell");
       cellBtns.forEach((btn) => {
-        console.log(btn);
         btn.disabled = true;
       });
-      winnerName.textcontent = game.getActivePlayer();
-      winnerToken.textcontent = game.getActiveToken();
+
+    // show results
+    if (game.gameStatus() === "won") {
+      reportWinner.textContent = `The winner is ${game.getActivePlayer()} (Player ${game.getActiveToken()}).`;
+    }
+
+    if (game.gameStatus() === "tied") {
+      reportWinner.textContent = `The game is tied.`;
+  }
+
       resultDiv.classList.toggle("show");
     }    
   }
@@ -348,6 +276,7 @@ function ScreenController() {
   const resetGame = () => {
     resultDiv.classList.toggle("show");
     playersDiv.classList.toggle("show");
+    gameboardDiv.textContent = "";
   }
 
   // assign event handlers
@@ -357,8 +286,3 @@ function ScreenController() {
 }
 
 ScreenController();
-
-/* TO DO:
-- fix results div
-- make results div appear/disappear
-*/
